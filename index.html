@@ -1078,6 +1078,8 @@ function setupScrollObserver() {
 
 /* === PROJECT === */
 function renderProject(slug) {
+  // Decode URL-encoded slugs (e.g., Chinese characters）
+  slug = decodeURIComponent(slug);
   if (filteredProjects.length === 0) {
     updateFilteredProjects();
   }
