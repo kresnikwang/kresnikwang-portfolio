@@ -988,6 +988,27 @@ function resetFilters() {
   applyFilters();
 }
 
+// Cache for thumb dimensions (width/height in pixels)
+const thumbDimensionsCache = new Map();
+
+// Convert a full image path to its thumbnail path
+function getThumbPath(fullPath) {
+  // images/{slug}/{file}.webp -> images/thumbs/{slug}/{file}.webp
+  if (fullPath.startsWith('images/')) {
+    return 'images/thumbs/' + fullPath.slice(7);
+  }
+  return fullPath;
+}
+
+// Get cached dimensions for a thumb, or default to 800x1200 (2:3 fallback)
+function getThumbDimensions(thumbPath) {
+  if (thumbDimensionsCache.has(thumbPath)) {
+    return thumbDimensionsCache.get(thumbPath);
+  }
+  // Default to 800x1200 (2:3 portrait) — most common ratio in this portfolio
+  return { w: 800, h: 1200 };
+}
+
 function appendCards() {
   const grid = document.getElementById('grid');
   if (!grid) return;
@@ -1014,20 +1035,33 @@ function appendCards() {
     items = reordered.filter(Boolean);
   }
 
-  grid.innerHTML = '';
+  // Use DocumentFragment for batch insertion (perf optimization)
+  const frag = document.createDocumentFragment();
   items.forEach((p, i) => {
     const a = document.createElement('a');
     a.href = `#/project/${p.slug}`;
     a.className = 'project-card';
     a.style.animationDelay = `${(i % 20) * 20}ms`;
+
+    // First 4 cards: eager load with high priority; rest: lazy
+    const isFirstFour = i < 4;
+    const loadingAttr = isFirstFour ? 'eager' : 'lazy';
+    const fetchPriorityAttr = isFirstFour ? 'high' : 'auto';
+
+    const thumbPath = getThumbPath(p.cover);
+    const dims = getThumbDimensions(thumbPath);
+
     a.innerHTML = `
-      <img src="${p.cover}" alt="${p.title}" loading="lazy" onerror="this.parentElement.style.background='#ccc'">
+      <img src="${thumbPath}" alt="${p.title}" loading="${loadingAttr}" fetchpriority="${fetchPriorityAttr}" width="${dims.w}" height="${dims.h}" onerror="this.onerror=null;this.src='${p.cover}';this.removeAttribute('width');this.removeAttribute('height');">
       <div class="card-overlay">
         <h3>${p.title}</h3>
         <div class="card-meta">${p.client} &middot; ${p.year}</div>
       </div>`;
-    grid.appendChild(a);
+    frag.appendChild(a);
   });
+
+  grid.innerHTML = '';
+  grid.appendChild(frag);
 }
 
 function setupScrollObserver() {
@@ -1105,7 +1139,7 @@ function renderAbout() {
             <div class="contact-item"><span class="contact-label">Email</span><span class="contact-value"><a href="mailto:kris.wang@skandstudio.com">kris.wang@skandstudio.com</a></span></div>
             <div class="contact-item"><span class="contact-label">WeChat</span><span class="contact-value">Kresnikwang</span></div>
             <div class="contact-item"><span class="contact-label">Phone</span><span class="contact-value"><a href="tel:+8618967107623">+86 18967107623</a></span></div>
-            <div class="contact-item"><span class="contact-label">Studio</span><span class="contact-value">Changning District, Pingwu Rd, No. 38 \u2013 307, Shanghai, China</span></div>
+            <div class="contact-item"><span class="contact-label">Studio</span><span class="contact-value">Based At Shanghai & Hangzhou, China</span></div>
           </div>
         </div>
       </div>
