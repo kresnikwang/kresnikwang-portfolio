@@ -311,19 +311,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   opacity: 0.8;
 }
 
-/* === PORTFOLIO GRID (Row-major: left-to-right then top-to-bottom) === */
+/* === PORTFOLIO GRID (Masonry via column-count, JS reorder for row-major) === */
 .portfolio-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
+  column-count: 4; column-gap: 0;
   padding: 0;
 }
-@media (max-width: 1200px) { .portfolio-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 800px) { .portfolio-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 480px) { .portfolio-grid { grid-template-columns: 1fr; } }
+@media (max-width: 1200px) { .portfolio-grid { column-count: 3; } }
+@media (max-width: 800px) { .portfolio-grid { column-count: 2; } }
+@media (max-width: 480px) { .portfolio-grid { column-count: 1; } }
 .project-card {
   position: relative; overflow: hidden; cursor: pointer;
-  display: block;
+  break-inside: avoid; display: block;
   background: #e5e5e5; line-height: 0;
   opacity: 0;
   transform: translateY(16px);
@@ -333,9 +331,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   to { opacity: 1; transform: translateY(0); }
 }
 .project-card img {
-  width: 100%; height: 100%; display: block;
-  aspect-ratio: 2/3;
-  object-fit: cover;
+  width: 100%; height: auto; display: block;
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s;
 }
 .project-card:hover img { transform: scale(1.04); filter: brightness(0.65); }
@@ -776,6 +772,32 @@ function updateFilteredProjects() {
     const idxB = projects.indexOf(b);
     return sortOrder === 'desc' ? idxA - idxB : idxB - idxA;
   });
+
+  // Reorder for column-count layout so visual order is row-major
+  filteredProjects = reorderForColumns(filteredProjects);
+}
+
+function getColumnCount() {
+  const w = window.innerWidth;
+  if (w <= 480) return 1;
+  if (w <= 800) return 2;
+  if (w <= 1200) return 3;
+  return 4;
+}
+
+function reorderForColumns(arr) {
+  if (!arr || arr.length === 0) return arr;
+  const cols = getColumnCount();
+  if (cols <= 1) return arr;
+  const rows = Math.ceil(arr.length / cols);
+  const reordered = new Array(arr.length);
+  for (let i = 0; i < arr.length; i++) {
+    const row = Math.floor(i / cols);
+    const col = i % cols;
+    const targetIdx = col * rows + row;
+    reordered[targetIdx] = arr[i];
+  }
+  return reordered.filter(item => item !== undefined);
 }
 
 // Initial calculation
@@ -1131,6 +1153,17 @@ window.addEventListener('scroll', () => {
 
 window.addEventListener('hashchange', navigate);
 navigate();
+
+let prevColCount = getColumnCount();
+window.addEventListener('resize', () => {
+  const newCols = getColumnCount();
+  if (newCols !== prevColCount) {
+    prevCols = newCols;
+    if (location.hash === '#/' || location.hash === '') {
+      applyFilters();
+    }
+  }
+});
 </script>
 </body>
 </html>
