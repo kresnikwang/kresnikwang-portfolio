@@ -311,27 +311,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   opacity: 0.8;
 }
 
-/* === PORTFOLIO GRID (Explicit rows via flex, natural ratio, no gaps) === */
+/* === PORTFOLIO GRID (column-count masonry) === */
 .portfolio-grid {
-  display: flex;
-  flex-direction: column;
+  column-count: 4; column-gap: 0;
   padding: 0;
 }
-.grid-row {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: flex-start;
-}
-.grid-row .project-card {
-  flex: 1;
-  min-width: 0;
-}
-@media (max-width: 1200px) { .grid-row { flex-wrap: wrap; } .grid-row .project-card { flex: 0 0 33.333%; } }
-@media (max-width: 800px)  { .grid-row .project-card { flex: 0 0 50%; } }
-@media (max-width: 480px)  { .grid-row .project-card { flex: 0 0 100%; } }
+@media (max-width: 1200px) { .portfolio-grid { column-count: 3; } }
+@media (max-width: 800px)  { .portfolio-grid { column-count: 2; } }
+@media (max-width: 480px)  { .portfolio-grid { column-count: 1; } }
 .project-card {
   position: relative; overflow: hidden; cursor: pointer;
-  display: block;
+  break-inside: avoid; display: block;
   background: #e5e5e5; line-height: 0;
   opacity: 0;
   transform: translateY(16px);
@@ -1003,8 +993,8 @@ function appendCards() {
   if (!grid) return;
   const end = Math.min(visibleCount, filteredProjects.length);
 
-  grid.innerHTML = '';
-
+  // Get visible items and reorder for column-count visual row-major order
+  let items = filteredProjects.slice(0, end);
   const cols = (() => {
     const w = window.innerWidth;
     if (w <= 480) return 1;
@@ -1013,26 +1003,31 @@ function appendCards() {
     return 4;
   })();
 
-  for (let r = 0; r * cols < end; r++) {
-    const row = document.createElement('div');
-    row.className = 'grid-row';
-    for (let c = 0; c < cols && r * cols + c < end; c++) {
-      const idx = r * cols + c;
-      const p = filteredProjects[idx];
-      const a = document.createElement('a');
-      a.href = `#/project/${p.slug}`;
-      a.className = 'project-card';
-      a.style.animationDelay = `${c * 40}ms`;
-      a.innerHTML = `
+  if (cols > 1) {
+    const rows = Math.ceil(items.length / cols);
+    const reordered = new Array(items.length);
+    for (let i = 0; i < items.length; i++) {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      reordered[col * rows + row] = items[i];
+    }
+    items = reordered.filter(Boolean);
+  }
+
+  grid.innerHTML = '';
+  items.forEach((p, i) => {
+    const a = document.createElement('a');
+    a.href = `#/project/${p.slug}`;
+    a.className = 'project-card';
+    a.style.animationDelay = `${(i % 20) * 20}ms`;
+    a.innerHTML = `
       <img src="${p.cover}" alt="${p.title}" loading="lazy" onerror="this.parentElement.style.background='#ccc'">
       <div class="card-overlay">
         <h3>${p.title}</h3>
         <div class="card-meta">${p.client} &middot; ${p.year}</div>
       </div>`;
-      row.appendChild(a);
-    }
-    grid.appendChild(row);
-  }
+    grid.appendChild(a);
+  });
 }
 
 function setupScrollObserver() {
@@ -1153,12 +1148,6 @@ window.addEventListener('scroll', () => {
 
 window.addEventListener('hashchange', navigate);
 navigate();
-
-window.addEventListener('resize', () => {
-  if (location.hash === '#/' || location.hash === '') {
-    applyFilters();
-  }
-});
 </script>
 </body>
 </html>
