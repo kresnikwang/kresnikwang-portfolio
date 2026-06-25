@@ -311,17 +311,27 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   opacity: 0.8;
 }
 
-/* === PORTFOLIO GRID (Masonry via column-count, JS reorder for row-major) === */
+/* === PORTFOLIO GRID (Explicit rows via flex, natural ratio, no gaps) === */
 .portfolio-grid {
-  column-count: 4; column-gap: 0;
+  display: flex;
+  flex-direction: column;
   padding: 0;
 }
-@media (max-width: 1200px) { .portfolio-grid { column-count: 3; } }
-@media (max-width: 800px) { .portfolio-grid { column-count: 2; } }
-@media (max-width: 480px) { .portfolio-grid { column-count: 1; } }
+.grid-row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+.grid-row .project-card {
+  flex: 1;
+  min-width: 0;
+}
+@media (max-width: 1200px) { .grid-row { flex-wrap: wrap; } .grid-row .project-card { flex: 0 0 33.333%; } }
+@media (max-width: 800px)  { .grid-row .project-card { flex: 0 0 50%; } }
+@media (max-width: 480px)  { .grid-row .project-card { flex: 0 0 100%; } }
 .project-card {
   position: relative; overflow: hidden; cursor: pointer;
-  break-inside: avoid; display: block;
+  display: block;
   background: #e5e5e5; line-height: 0;
   opacity: 0;
   transform: translateY(16px);
@@ -772,32 +782,6 @@ function updateFilteredProjects() {
     const idxB = projects.indexOf(b);
     return sortOrder === 'desc' ? idxA - idxB : idxB - idxA;
   });
-
-  // Reorder for column-count layout so visual order is row-major
-  filteredProjects = reorderForColumns(filteredProjects);
-}
-
-function getColumnCount() {
-  const w = window.innerWidth;
-  if (w <= 480) return 1;
-  if (w <= 800) return 2;
-  if (w <= 1200) return 3;
-  return 4;
-}
-
-function reorderForColumns(arr) {
-  if (!arr || arr.length === 0) return arr;
-  const cols = getColumnCount();
-  if (cols <= 1) return arr;
-  const rows = Math.ceil(arr.length / cols);
-  const reordered = new Array(arr.length);
-  for (let i = 0; i < arr.length; i++) {
-    const row = Math.floor(i / cols);
-    const col = i % cols;
-    const targetIdx = col * rows + row;
-    reordered[targetIdx] = arr[i];
-  }
-  return reordered.filter(item => item !== undefined);
 }
 
 // Initial calculation
@@ -1017,21 +1001,37 @@ function resetFilters() {
 function appendCards() {
   const grid = document.getElementById('grid');
   if (!grid) return;
-  const start = grid.children.length;
   const end = Math.min(visibleCount, filteredProjects.length);
-  for (let i = start; i < end; i++) {
-    const p = filteredProjects[i];
-    const a = document.createElement('a');
-    a.href = `#/project/${p.slug}`;
-    a.className = 'project-card';
-    a.style.animationDelay = `${(i - start) * 40}ms`;
-    a.innerHTML = `
+
+  grid.innerHTML = '';
+
+  const cols = (() => {
+    const w = window.innerWidth;
+    if (w <= 480) return 1;
+    if (w <= 800) return 2;
+    if (w <= 1200) return 3;
+    return 4;
+  })();
+
+  for (let r = 0; r * cols < end; r++) {
+    const row = document.createElement('div');
+    row.className = 'grid-row';
+    for (let c = 0; c < cols && r * cols + c < end; c++) {
+      const idx = r * cols + c;
+      const p = filteredProjects[idx];
+      const a = document.createElement('a');
+      a.href = `#/project/${p.slug}`;
+      a.className = 'project-card';
+      a.style.animationDelay = `${c * 40}ms`;
+      a.innerHTML = `
       <img src="${p.cover}" alt="${p.title}" loading="lazy" onerror="this.parentElement.style.background='#ccc'">
       <div class="card-overlay">
         <h3>${p.title}</h3>
         <div class="card-meta">${p.client} &middot; ${p.year}</div>
       </div>`;
-    grid.appendChild(a);
+      row.appendChild(a);
+    }
+    grid.appendChild(row);
   }
 }
 
@@ -1154,14 +1154,9 @@ window.addEventListener('scroll', () => {
 window.addEventListener('hashchange', navigate);
 navigate();
 
-let prevColCount = getColumnCount();
 window.addEventListener('resize', () => {
-  const newCols = getColumnCount();
-  if (newCols !== prevColCount) {
-    prevCols = newCols;
-    if (location.hash === '#/' || location.hash === '') {
-      applyFilters();
-    }
+  if (location.hash === '#/' || location.hash === '') {
+    applyFilters();
   }
 });
 </script>
