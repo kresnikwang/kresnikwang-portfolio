@@ -811,6 +811,7 @@ function setActiveNav(key) {
 
 /* === HOME === */
 function renderHome() {
+  sortOrder = 'desc';
   visibleCount = BATCH_SIZE;
   if (scrollObserver) { scrollObserver.disconnect(); scrollObserver = null; }
   
@@ -840,8 +841,8 @@ function renderHome() {
             </div>
 
             <!-- Sort Toggle -->
-            <button class="sort-btn" id="sort-toggle-btn" title="Toggle sorting order">
-              <span class="sort-text">Newest / 最新</span>
+            <button class="sort-btn" id="sort-toggle-btn" title="Toggle sort order">
+              <span class="sort-text">Old → New / 旧→新</span>
               <span class="sort-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="sort-arrow">
                   <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -907,10 +908,10 @@ function updateControlStates() {
     const sortText = sortBtn.querySelector('.sort-text');
     if (sortOrder === 'desc') {
       sortBtn.classList.remove('asc');
-      if (sortText) sortText.textContent = 'Newest / 最新';
+      if (sortText) sortText.textContent = 'Old → New / 旧→新';
     } else {
       sortBtn.classList.add('asc');
-      if (sortText) sortText.textContent = 'Oldest / 最旧';
+      if (sortText) sortText.textContent = 'New → Old / 新→旧';
     }
   }
 
