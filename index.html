@@ -311,17 +311,19 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   opacity: 0.8;
 }
 
-/* === PORTFOLIO GRID (Masonry / Packed) === */
+/* === PORTFOLIO GRID (Row-major: left-to-right then top-to-bottom) === */
 .portfolio-grid {
-  column-count: 4; column-gap: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
   padding: 0;
 }
-@media (max-width: 1200px) { .portfolio-grid { column-count: 3; } }
-@media (max-width: 800px) { .portfolio-grid { column-count: 2; } }
-@media (max-width: 480px) { .portfolio-grid { column-count: 1; } }
+@media (max-width: 1200px) { .portfolio-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 800px) { .portfolio-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .portfolio-grid { grid-template-columns: 1fr; } }
 .project-card {
   position: relative; overflow: hidden; cursor: pointer;
-  break-inside: avoid; display: block;
+  display: block;
   background: #e5e5e5; line-height: 0;
   opacity: 0;
   transform: translateY(16px);
