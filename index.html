@@ -105,6 +105,212 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .page { opacity: 0; transform: translateY(12px); animation: pageIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 @keyframes pageIn { to { opacity: 1; transform: translateY(0); } }
 
+/* === PORTFOLIO CONTROLS === */
+.portfolio-controls {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 16px clamp(16px, 4vw, 48px) 16px clamp(16px, 4vw, 48px);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 10;
+}
+.controls-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap; /* Force single line on desktop */
+  gap: 16px;
+}
+@media (max-width: 850px) {
+  .portfolio-controls {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .controls-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+}
+
+/* Category Tabs */
+.category-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.category-tabs::-webkit-scrollbar {
+  display: none;
+}
+.tab-btn {
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 20px;
+  background: #f5f5f7;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.tab-btn:hover {
+  background: #e8e8ed;
+  color: var(--text);
+}
+.tab-btn.active {
+  background: var(--text);
+  color: #fff;
+}
+
+/* Filter Actions */
+.filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+@media (max-width: 850px) {
+  .filter-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+}
+
+.custom-select-container {
+  position: relative;
+  min-width: 140px;
+}
+.custom-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #f5f5f7;
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 30px 6px 14px;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  outline: none;
+}
+.custom-select:hover, .custom-select:focus {
+  background: #e8e8ed;
+  border-color: rgba(0,0,0,0.1);
+}
+.select-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--text-secondary);
+  pointer-events: none;
+  transition: transform 0.25s ease;
+}
+.custom-select:focus + .select-arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Sort Button */
+.sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f5f5f7;
+  color: var(--text);
+  padding: 6px 14px;
+  border-radius: 18px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  border: 1px solid transparent;
+}
+.sort-btn:hover {
+  background: #e8e8ed;
+  border-color: rgba(0,0,0,0.1);
+}
+.sort-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sort-icon svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sort-btn.asc svg {
+  transform: rotate(180deg);
+}
+
+/* Clear Button */
+.clear-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 18px;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.9) translateX(10px);
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+}
+.clear-btn.visible {
+  opacity: 1;
+  transform: scale(1) translateX(0);
+  pointer-events: auto;
+}
+.clear-btn:hover {
+  background: #e8e8ed;
+  color: var(--text);
+  border-color: rgba(0, 0, 0, 0.05);
+}
+.clear-icon {
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 400;
+}
+
+/* Empty State */
+.empty-state {
+  max-width: var(--max-w);
+  margin: 80px auto;
+  text-align: center;
+  padding: 0 24px;
+}
+.empty-state p {
+  font-family: var(--serif);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+.reset-btn {
+  padding: 10px 24px;
+  background: var(--text);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+.reset-btn:hover {
+  opacity: 0.8;
+}
+
 /* === PORTFOLIO GRID (Masonry / Packed) === */
 .portfolio-grid {
   column-count: 4; column-gap: 0;
@@ -117,6 +323,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   position: relative; overflow: hidden; cursor: pointer;
   break-inside: avoid; display: block;
   background: #e5e5e5; line-height: 0;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: cardFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes cardFadeIn {
+  to { opacity: 1; transform: translateY(0); }
 }
 .project-card img {
   width: 100%; height: auto; display: block;
@@ -397,6 +609,171 @@ const projects = [
 {slug:"2020hc_portrait_sz",title:"2020 深圳湾公园 – 韩潮HC",client:"韩潮HC",services:"Photography",year:2020,description:"Portrait photography at Shenzhen Bay Park",cover:"images/2020hc_portrait_sz/dec36b11-75ce-4038-a712-7d173070192c_rw_3840-scaled.webp",images:["images/2020hc_portrait_sz/dec36b11-75ce-4038-a712-7d173070192c_rw_3840-scaled.webp","images/2020hc_portrait_sz/803ff597-c76e-4cca-ae42-e38d673882ae_rw_3840-scaled.webp","images/2020hc_portrait_sz/71f69cf3-e810-4462-ad07-cafda6ef593e_rw_3840-scaled.webp","images/2020hc_portrait_sz/1c4ae794-ad69-420a-a0ac-55842bb171e0_rw_3840-scaled.webp","images/2020hc_portrait_sz/cc4631d1-d44b-4401-b2b3-43dcce1da5b2-scaled.webp","images/2020hc_portrait_sz/71a92303-bc01-4033-b2c9-7db61a01f993_rw_3840-scaled.webp"]},
 {slug:"2020-hc-portrait",title:"2020 韩潮HC Portrait",client:"韩潮HC",services:"Photography",year:2020,description:"韩潮HC Portrait photography",cover:"images/2020-hc-portrait/63db06c7-e1e1-4649-94d5-49168bc453ff_rw_3840-scaled.webp",images:["images/2020-hc-portrait/63db06c7-e1e1-4649-94d5-49168bc453ff_rw_3840-scaled.webp","images/2020-hc-portrait/78e88275-4294-4797-aaa1-d7e394b3d2bb_rw_3840-scaled.webp","images/2020-hc-portrait/311b74ba-da04-4d61-ab3e-5566d36f06cd_rw_1920-scaled.webp","images/2020-hc-portrait/13536130-1d63-4415-84f1-cfa3f087482a_rw_3840-scaled.webp","images/2020-hc-portrait/b20263d3-d820-46ce-bd41-44cf6c2fafb8_rw_3840-scaled.webp","images/2020-hc-portrait/fb9e0286-e543-4726-98f1-9e6954ff4317_rw_3840-scaled.webp"]}
 ];
+/* === FILTER, SORT & CATEGORIES === */
+function getProjectCategories(p) {
+  const cats = [];
+  const clientLower = p.client.toLowerCase();
+  const titleLower = p.title.toLowerCase();
+  const descLower = (p.description || '').toLowerCase();
+  const servicesLower = p.services.toLowerCase();
+
+  // Sports (运动)
+  const isSports = 
+    clientLower.includes('nike') ||
+    clientLower.includes('jordan') ||
+    clientLower.includes('decathlon') ||
+    clientLower.includes('wilson') ||
+    clientLower.includes('atomic') ||
+    clientLower.includes('salomon') ||
+    clientLower.includes('descente') ||
+    clientLower.includes('burton') ||
+    clientLower.includes('韩潮') ||
+    titleLower.includes('run') ||
+    titleLower.includes('running') ||
+    titleLower.includes('ski') ||
+    titleLower.includes('snowboard') ||
+    descLower.includes('run') ||
+    descLower.includes('running') ||
+    descLower.includes('marathon') ||
+    descLower.includes('basketball') ||
+    descLower.includes('streetball') ||
+    descLower.includes('skate') ||
+    descLower.includes('ski') ||
+    descLower.includes('snowboard') ||
+    descLower.includes('tennis') ||
+    descLower.includes('athlete') ||
+    descLower.includes('sport');
+  
+  if (isSports) cats.push('sports');
+
+  // Outdoor (户外)
+  const isOutdoor = 
+    clientLower.includes('jack wolfskin') ||
+    clientLower.includes('burton') ||
+    clientLower.includes('salomon') ||
+    clientLower.includes('atomic') ||
+    clientLower.includes('descente') ||
+    clientLower.includes('fkncp') ||
+    titleLower.includes('outdoor') ||
+    titleLower.includes('ski') ||
+    titleLower.includes('snowboard') ||
+    descLower.includes('outdoor') ||
+    descLower.includes('wild') ||
+    descLower.includes('mountain') ||
+    descLower.includes('ski') ||
+    descLower.includes('snowboard') ||
+    descLower.includes('snowboarding') ||
+    descLower.includes('hike') ||
+    descLower.includes('hiking') ||
+    descLower.includes('野外') ||
+    descLower.includes('去野') ||
+    descLower.includes('trail') ||
+    descLower.includes('hainan') ||
+    descLower.includes('trip');
+  
+  if (isOutdoor) cats.push('outdoor');
+
+  // Fashion (时尚)
+  const isFashion = 
+    clientLower.includes('ugg') ||
+    clientLower.includes('tumi') ||
+    clientLower.includes('converse') ||
+    clientLower.includes('marshall') ||
+    clientLower.includes('hyperkiller') ||
+    clientLower.includes('skand') ||
+    titleLower.includes('lookbook') ||
+    titleLower.includes('cny') ||
+    descLower.includes('lookbook') ||
+    descLower.includes('streetwear') ||
+    descLower.includes('style') ||
+    descLower.includes('fashion') ||
+    descLower.includes('headphone') ||
+    descLower.includes('product beauty') ||
+    descLower.includes('sneaker') ||
+    descLower.includes('shoe');
+  
+  if (isFashion) cats.push('fashion');
+
+  // Fallbacks
+  if (cats.length === 0) {
+    if (clientLower.includes('wagas')) {
+      cats.push('sports'); // WTA tennis or Running
+    } else {
+      cats.push('fashion');
+    }
+  }
+
+  return cats;
+}
+
+// Client normalization map to keep display clean and grouped
+const clientNormalizationMap = {
+  'nike': 'Nike',
+  'converse': 'Converse',
+  'jordan': 'Jordan',
+  'ugg': 'UGG',
+  'tumi': 'Tumi',
+  'salomon': 'Salomon',
+  'descente': 'Descente',
+  'atomic': 'Atomic',
+  'burton': 'Burton',
+  'marshall': 'Marshall',
+  'wilson': 'Wilson',
+  'jack wolfskin': 'Jack Wolfskin',
+  'wagas': 'Wagas',
+  'hyperkiller': 'HyperKiller',
+  'fkncp': 'FKnCP',
+  'skand': 'SKAND',
+  '韩潮hc': '韩潮HC',
+  'decathlon': 'Decathlon',
+  'personal': 'Personal'
+};
+
+// Pre-process projects
+projects.forEach(p => {
+  const rawClient = p.client.trim();
+  const normalizedKey = rawClient.toLowerCase();
+  if (clientNormalizationMap[normalizedKey]) {
+    p.client = clientNormalizationMap[normalizedKey];
+  } else if (p.client === 'NIKE') {
+    p.client = 'Nike';
+  } else if (p.client === 'CONVERSE') {
+    p.client = 'Converse';
+  } else if (p.client === 'JACK WOLFSKIN') {
+    p.client = 'Jack Wolfskin';
+  } else if (p.client === '韓潮HC') {
+    p.client = '韩潮HC';
+  }
+
+  p.categories = getProjectCategories(p);
+});
+
+/* === STATE VARIABLES === */
+let filterCategory = 'all';
+let filterClient = 'all';
+let sortOrder = 'desc'; // 'desc' = newest first, 'asc' = oldest first
+let filteredProjects = [];
+
+function updateFilteredProjects() {
+  filteredProjects = projects.filter(p => {
+    const categoryMatch = filterCategory === 'all' || p.categories.includes(filterCategory);
+    const clientMatch = filterClient === 'all' || p.client === filterClient;
+    return categoryMatch && clientMatch;
+  });
+
+  filteredProjects.sort((a, b) => {
+    if (a.year !== b.year) {
+      return sortOrder === 'desc' ? b.year - a.year : a.year - b.year;
+    }
+    // Stable sort: keep original index order in projects array
+    const idxA = projects.indexOf(a);
+    const idxB = projects.indexOf(b);
+    return sortOrder === 'desc' ? idxA - idxB : idxB - idxA;
+  });
+}
+
+// Initial calculation
+updateFilteredProjects();
 
 /* === ROUTER === */
 const app = document.getElementById('app');
@@ -435,22 +812,186 @@ function setActiveNav(key) {
 function renderHome() {
   visibleCount = BATCH_SIZE;
   if (scrollObserver) { scrollObserver.disconnect(); scrollObserver = null; }
+  
   app.innerHTML = `
     <div class="page">
+      <div class="portfolio-controls">
+        <div class="controls-container">
+          <!-- Category Filter tabs -->
+          <div class="category-tabs">
+            <button class="tab-btn" data-category="all">All / 全部</button>
+            <button class="tab-btn" data-category="sports">Sports / 运动</button>
+            <button class="tab-btn" data-category="fashion">Fashion / 时尚</button>
+            <button class="tab-btn" data-category="outdoor">Outdoor / 户外</button>
+          </div>
+          
+          <div class="filter-actions">
+            <!-- Client Dropdown -->
+            <div class="custom-select-container">
+              <select id="client-filter" class="custom-select">
+                <option value="all">All Clients / 所有客户</option>
+              </select>
+              <div class="select-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Sort Toggle -->
+            <button class="sort-btn" id="sort-toggle-btn" title="Toggle sorting order">
+              <span class="sort-text">Newest / 最新</span>
+              <span class="sort-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="sort-arrow">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+              </span>
+            </button>
+
+            <!-- Clear Filters Button -->
+            <button class="clear-btn" id="clear-filters-btn" title="Clear all filters">
+              <span class="clear-text">Clear / 清除</span>
+              <span class="clear-icon">&times;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      
       <div class="portfolio-grid" id="grid"></div>
+      
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <p>No projects match the selected filters. / 没有找到符合条件的项。</p>
+        <button class="reset-btn" onclick="resetFilters()">Reset Filters / 重置筛选</button>
+      </div>
+
       <div id="load-sentinel" style="height:1px;"></div>
     </div>`;
+
+  populateClients();
+  updateControlStates();
+  updateFilteredProjects();
   appendCards();
   setupScrollObserver();
+  setupControlListeners();
+}
+
+function populateClients() {
+  const select = document.getElementById('client-filter');
+  if (!select) return;
+  
+  select.innerHTML = '<option value="all">All Clients / 所有客户</option>';
+  const uniqueClients = [...new Set(projects.map(p => p.client))].sort((a, b) => a.localeCompare(b, 'zh-Hans-CN'));
+  
+  uniqueClients.forEach(client => {
+    const opt = document.createElement('option');
+    opt.value = client;
+    opt.textContent = client;
+    select.appendChild(opt);
+  });
+}
+
+function updateControlStates() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.category === filterCategory);
+  });
+  
+  const select = document.getElementById('client-filter');
+  if (select) {
+    select.value = filterClient;
+  }
+  
+  const sortBtn = document.getElementById('sort-toggle-btn');
+  if (sortBtn) {
+    const sortText = sortBtn.querySelector('.sort-text');
+    if (sortOrder === 'desc') {
+      sortBtn.classList.remove('asc');
+      if (sortText) sortText.textContent = 'Newest / 最新';
+    } else {
+      sortBtn.classList.add('asc');
+      if (sortText) sortText.textContent = 'Oldest / 最旧';
+    }
+  }
+
+  const clearBtn = document.getElementById('clear-filters-btn');
+  if (clearBtn) {
+    const isFiltered = filterCategory !== 'all' || filterClient !== 'all';
+    clearBtn.classList.toggle('visible', isFiltered);
+  }
+}
+
+function setupControlListeners() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterCategory = btn.dataset.category;
+      applyFilters();
+    });
+  });
+
+  const select = document.getElementById('client-filter');
+  if (select) {
+    select.addEventListener('change', (e) => {
+      filterClient = e.target.value;
+      applyFilters();
+    });
+  }
+
+  const sortBtn = document.getElementById('sort-toggle-btn');
+  if (sortBtn) {
+    sortBtn.addEventListener('click', () => {
+      sortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
+      applyFilters();
+    });
+  }
+
+  const clearBtn = document.getElementById('clear-filters-btn');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', resetFilters);
+  }
+}
+
+function applyFilters() {
+  updateControlStates();
+  updateFilteredProjects();
+  
+  visibleCount = BATCH_SIZE;
+  const grid = document.getElementById('grid');
+  const emptyState = document.getElementById('empty-state');
+  
+  if (grid) {
+    grid.innerHTML = '';
+  }
+  
+  if (filteredProjects.length === 0) {
+    if (grid) grid.style.display = 'none';
+    if (emptyState) emptyState.style.display = 'block';
+  } else {
+    if (grid) grid.style.display = '';
+    if (emptyState) emptyState.style.display = 'none';
+    appendCards();
+  }
+  
+  if (scrollObserver) {
+    scrollObserver.disconnect();
+    scrollObserver = null;
+  }
+  setupScrollObserver();
+}
+
+function resetFilters() {
+  filterCategory = 'all';
+  filterClient = 'all';
+  sortOrder = 'desc';
+  applyFilters();
 }
 
 function appendCards() {
   const grid = document.getElementById('grid');
   if (!grid) return;
   const start = grid.children.length;
-  const end = Math.min(visibleCount, projects.length);
+  const end = Math.min(visibleCount, filteredProjects.length);
   for (let i = start; i < end; i++) {
-    const p = projects[i];
+    const p = filteredProjects[i];
     const a = document.createElement('a');
     a.href = `#/project/${p.slug}`;
     a.className = 'project-card';
@@ -469,8 +1010,8 @@ function setupScrollObserver() {
   const sentinel = document.getElementById('load-sentinel');
   if (!sentinel) return;
   scrollObserver = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting && visibleCount < projects.length) {
-      visibleCount = Math.min(visibleCount + BATCH_SIZE, projects.length);
+    if (entries[0].isIntersecting && visibleCount < filteredProjects.length) {
+      visibleCount = Math.min(visibleCount + BATCH_SIZE, filteredProjects.length);
       appendCards();
     }
   }, { rootMargin: '200px' });
@@ -479,11 +1020,25 @@ function setupScrollObserver() {
 
 /* === PROJECT === */
 function renderProject(slug) {
-  const idx = projects.findIndex(p => p.slug === slug);
-  if (idx === -1) { renderHome(); return; }
-  const p = projects[idx];
-  const prev = idx > 0 ? projects[idx - 1] : null;
-  const next = idx < projects.length - 1 ? projects[idx + 1] : null;
+  if (filteredProjects.length === 0) {
+    updateFilteredProjects();
+  }
+  
+  let idx = filteredProjects.findIndex(p => p.slug === slug);
+  let p, prev, next;
+  
+  if (idx !== -1) {
+    p = filteredProjects[idx];
+    prev = idx > 0 ? filteredProjects[idx - 1] : null;
+    next = idx < filteredProjects.length - 1 ? filteredProjects[idx + 1] : null;
+  } else {
+    const rawIdx = projects.findIndex(p => p.slug === slug);
+    if (rawIdx === -1) { renderHome(); return; }
+    p = projects[rawIdx];
+    prev = rawIdx > 0 ? projects[rawIdx - 1] : null;
+    next = rawIdx < projects.length - 1 ? projects[rawIdx + 1] : null;
+  }
+  
   currentImages = p.images;
 
   app.innerHTML = `
